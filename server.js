@@ -208,12 +208,8 @@ app.post('/api/empresas_comerciales', verifyToken, isAdmin, async (req, res) => 
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// --- CONFIGURACIÓN PARA SERVIR REACT EN PRODUCCIÓN ---
+// Servir archivos estáticos de React compilados
 app.use(express.static(path.join(__dirname, 'build')));
 
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
-
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Backend y Frontend ejecutándose en puerto ${PORT}`));
+app.listen(PORT, () => console.log(`Backend ejecutándose en puerto ${PORT}`));
