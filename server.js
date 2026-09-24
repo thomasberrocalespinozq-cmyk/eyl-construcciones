@@ -208,8 +208,18 @@ app.post('/api/empresas_comerciales', verifyToken, isAdmin, async (req, res) => 
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// Servir archivos estáticos de React compilados
+// Servir archivos estáticos de React
 app.use(express.static(path.join(__dirname, 'build')));
+
+// Ruta explícita para que cargue la interfaz de React correctamente
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+// Manejo seguro para otras rutas de la app de React
+app.get(/^\/(?!api).*/, (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Backend ejecutándose en puerto ${PORT}`));
