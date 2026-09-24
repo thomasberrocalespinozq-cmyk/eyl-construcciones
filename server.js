@@ -9,12 +9,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Servir archivos estáticos del frontend (si los tienes en la carpeta public)
+// Servir archivos estáticos por si acaso
 app.use(express.static(path.join(__dirname, 'public')));
 
 const SECRET_KEY = "eyl_secreto_super_seguro_2026";
 
-// Configuración de la conexión a PostgreSQL (compatible con Render y entorno local)
+// Configuración de la conexión a PostgreSQL
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL || 'postgresql://postgres:password@localhost:5432/eyldb',
     ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false
@@ -50,13 +50,29 @@ async function initDB() {
 }
 initDB();
 
-// Ruta principal para evitar el error Cannot GET /
+// Ruta principal explícita para evitar el error Cannot GET /
 app.get('/', (req, res) => {
     res.send(`
-        <div style="font-family: Arial, sans-serif; text-align: center; margin-top: 50px;">
-            <h1 style="color: #2c3e50;">🚀 API de EYL Construcciones en línea</h1>
-            <p style="color: #555; font-size: 18px;">El servidor backend y la base de datos PostgreSQL están funcionando correctamente.</p>
-        </div>
+        <html>
+            <head>
+                <title>EYL Construcciones</title>
+                <meta charset="utf-8">
+                <style>
+                    body { font-family: Arial, sans-serif; background-color: #f4f6f9; text-align: center; padding-top: 50px; }
+                    .card { background: white; max-width: 600px; margin: 0 auto; padding: 40px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+                    h1 { color: #2c3e50; }
+                    p { color: #555; font-size: 16px; }
+                    .status { background: #e8f8f5; color: #1abc9c; padding: 10px; border-radius: 5px; font-weight: bold; margin-top: 20px; }
+                </style>
+            </head>
+            <body>
+                <div class="card">
+                    <h1>🚀 EYL Construcciones</h1>
+                    <p>El sistema y la base de datos PostgreSQL se encuentran conectados y operativos en la nube.</p>
+                    <div class="status">Estado: Servidor Activo (Live)</div>
+                </div>
+            </body>
+        </html>
     `);
 });
 
