@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Servir archivos estáticos del frontend
+// Servir archivos estáticos del frontend (si los tienes en la carpeta public)
 app.use(express.static(path.join(__dirname, 'public')));
 
 const SECRET_KEY = "eyl_secreto_super_seguro_2026";
@@ -49,6 +49,16 @@ async function initDB() {
     }
 }
 initDB();
+
+// Ruta principal para evitar el error Cannot GET /
+app.get('/', (req, res) => {
+    res.send(`
+        <div style="font-family: Arial, sans-serif; text-align: center; margin-top: 50px;">
+            <h1 style="color: #2c3e50;">🚀 API de EYL Construcciones en línea</h1>
+            <p style="color: #555; font-size: 18px;">El servidor backend y la base de datos PostgreSQL están funcionando correctamente.</p>
+        </div>
+    `);
+});
 
 const verifyToken = (req, res, next) => {
     const token = req.headers['authorization'];
