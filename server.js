@@ -3,10 +3,14 @@ const cors = require('cors');
 const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const path = require('path'); // <-- Añadido para manejar rutas de carpetas
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Servir los archivos estáticos de tu frontend (carpeta public)
+app.use(express.static(path.join(__dirname, 'public')));
 
 const SECRET_KEY = "eyl_secreto_super_seguro_2026";
 
@@ -205,6 +209,11 @@ app.post('/api/empresas_comerciales', verifyToken, isAdmin, async (req, res) => 
         );
         res.json({ id: result.rows[0].id });
     } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// Redirigir cualquier otra ruta al index.html para que cargue la interfaz web
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 const PORT = process.env.PORT || 5000;
